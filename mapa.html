@@ -43,8 +43,15 @@ function pin(lat, lon, label, cls, title) {
   L.marker([lat, lon], {icon: L.divIcon({className:'', html:'<div class="pin '+cls+'">'+label+'</div>',
     iconSize:[26,26], iconAnchor:[13,13]})}).addTo(map).bindPopup(title);
 }
-D.stops.forEach(s => pin(s.lat, s.lon, s.n, '', '<b>'+s.n+'. '+s.name+'</b><br>'+s.t));
-pin(D.lunch.lat, D.lunch.lon, '\u25CF', 'lunch', '<b>Obed:</b> ' + D.lunch.name);
+const near = (a, b) => Math.abs(a.lat-b.lat) < 0.0003 && Math.abs(a.lon-b.lon) < 0.0003;
+let lunchShown = false;
+D.stops.forEach(s => {
+  const isL = near(s, D.lunch);
+  if (isL) lunchShown = true;
+  pin(s.lat, s.lon, s.n, isL ? 'lunch' : '',
+      '<b>'+s.n+'. '+s.name+'</b><br>'+s.t + (isL ? '<br>\uD83C\uDF7D ' + D.lunch.name : ''));
+});
+if (!lunchShown) pin(D.lunch.lat, D.lunch.lon, '\u25CF', 'lunch', '<b>Obed:</b> ' + D.lunch.name);
 
 map.fitBounds(L.latLngBounds(line.concat([[D.lunch.lat, D.lunch.lon]])), {padding:[46,46]});
 
