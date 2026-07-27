@@ -53,7 +53,8 @@ D.stops.forEach(s => {
 });
 if (!lunchShown) pin(D.lunch.lat, D.lunch.lon, '\u25CF', 'lunch', '<b>Obed:</b> ' + D.lunch.name);
 
-map.fitBounds(L.latLngBounds(line.concat([[D.lunch.lat, D.lunch.lon]])), {padding:[46,46]});
+map.fitBounds(L.latLngBounds(line.concat([[D.lunch.lat, D.lunch.lon]])),
+  {paddingTopLeft:[46,92], paddingBottomRight:[46,54]});
 
 document.getElementById('ht').textContent = 'Deň ' + D.n + ' \u2013 ' + D.date;
 document.getElementById('hs').textContent = D.theme + (D.km ? '  \u00B7  ' + D.km : '');
