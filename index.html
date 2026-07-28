@@ -201,7 +201,7 @@ function renderDay() {
        (nDone ? ' <small>(' + nDone + ')</small>' : '') + '</button>';
   h += '<div class="map">' +
        (d.mapimg ? '<img src="' + d.mapimg + '" alt="Mapa trasy dňa">' : d.svg) +
-       '</div><a class="maplink" href="' + d.maplive + '" target="_blank" rel="noopener">' +
+       '</div><a class="maplink" href="' + d.maplive + '">' +
        '🗺 Otvoriť mapu, ktorá sa dá priblížiť</a>';
   h += '<div class="note"><b>Pozor:</b> ' + esc(d.note) + '</div>';
 
@@ -319,13 +319,15 @@ nav.addEventListener('click', e => {
   render();
 });
 
-/* --- štart: podľa dátumu vyber správny deň --- */
+/* --- štart: ?d=N (návrat z mapy), inak podľa dátumu --- */
 (function () {
+  const qd = parseInt(new URLSearchParams(location.search).get('d') || '0');
+  const qi = DAYS.findIndex(d => d.n === qd);
   const t = new Date();
   const iso = t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') +
               '-' + String(t.getDate()).padStart(2, '0');
   const i = DAYS.findIndex(d => d.iso === iso);
-  view = i >= 0 ? i : 0;
+  view = qi >= 0 ? qi : (i >= 0 ? i : 0);
   [...nav.children].forEach((c, i) => c.classList.toggle('on', i === view));
   render();
 })();
